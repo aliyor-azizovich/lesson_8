@@ -107,10 +107,20 @@ def main():
 
 # main()
 new_file = "copied.csv"            
-def copy():
-    create_file(new_file)
-    write_file(new_file, file_name)
-    print(*read_file(new_file))
-# copy()
-for i in "phone.csv":
-    print(i)
+def copy_row(file_name, new_file, row_num):
+    with open(file_name, "r", encoding='utf-8') as data:
+        f_reader = DictReader(data)
+        rows = list(f_reader)
+        if row_num < 1 or row_num > len(rows):
+            print("Неверный номер строки")
+            return
+        row = rows[row_num-1]
+    with open(new_file, "w", encoding='utf-8', newline='') as data:
+        f_writer = DictWriter(data, fieldnames=['Имя', 'Фамилия', 'Телефон'])
+        f_writer.writeheader()
+        f_writer.writerow(row)
+    print(f"Строка {row_num} успешно скопирована в файл {new_file}")
+row_num = int(input("Введите номер строки: "))
+copy_row(file_name, new_file, row_num)
+print(*read_file(new_file))
+
